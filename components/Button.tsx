@@ -1,11 +1,12 @@
 'use client'
+import { PropsWithChildren } from "react"
 
-type prop = {
-    children: React.ReactNode;
+type prop = PropsWithChildren<{
+    // children: React.ReactNode;
     className?: React.CSSProperties;
     onClick?: () => void;
     type?: "button" | "submit" | "reset"; // come back to this
-}
+}>
 
 const Button = ({ children, className, onClick }: prop) => {
   return (

@@ -17,6 +17,7 @@ export default function Home() {
           <CountDown />
         </div>
         <Button onClick={() => alert("Sport Fiesta has not officially started")}>Scoreboard</Button>
+        <Button onClick={() => alert("Sport Fiesta has not officially started")}>Check out Participants</Button>
       </div>
     </main>
   )
