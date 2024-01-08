@@ -3,6 +3,7 @@
 import { ChangeEvent, useState } from "react";
 import Header from "@/components/Header";
 import Button from "@/components/Button";
+import supabase from "@/config/supabaseConfig";
 
 const page = () => {
   const [name, setName] = useState<string>("");
@@ -11,6 +12,8 @@ const page = () => {
   const [gender, setGender] = useState<string>("");
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
+
+  const [formError, setFormError] = useState("")
 
   const handleGenderChange = (selectedGender: string) => {
     setGender(selectedGender);
@@ -64,7 +67,7 @@ const page = () => {
 
   // console.log(team);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     // alert("Form submitted")
 
@@ -74,9 +77,22 @@ const page = () => {
       team, 
       gender, 
       selectedSports, 
-      file: file?.name
+      // file: file?.name
     }
     console.log(submittedData);
+
+    const { data, error } = await supabase
+      .from('participants')
+      .insert([{ email, gender, name, team, selectedSports }])
+      .select()
+
+      if(error){
+        console.log(error.message);
+      }
+
+      if(data){
+        console.log("Data submitted to Supabase");
+      }
   }
 
   return (
