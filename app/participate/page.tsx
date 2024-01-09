@@ -104,11 +104,11 @@ const page = () => {
   return (
     <div className="flex min-h-screen flex-col items-center pb-20">
       <Header />
-      <h3 className="text-2xl mb-8">Participation Page</h3>
+      <h3 className="text-2xl mb-8 text-center">Participation Page</h3>
 
       <form
         onSubmit={handleSubmit}
-        className="w-2/4 mx-auto flex flex-col gap-6"
+        className="w-[90%] border border-green-400 md:w-2/4 md:border md:border-red-500 mx-auto flex flex-col gap-6"
       >
         <div className="w-full flex gap-4 items-center">
           <label htmlFor="name" className="font-semibold">
@@ -214,7 +214,7 @@ const page = () => {
 
         <div className="w-full">
           <div className="font-semibold">Pick Sport </div> <br />
-          <div className="flex flex-col flex-wrap h-[450px]">
+          <div className="flex flex-col flex-wrap lg:h-[450px]">
             {sportsList.map((sport) => (
               <>
                 <div key={sport} className="">
