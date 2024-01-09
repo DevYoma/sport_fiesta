@@ -1,11 +1,16 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import Header from "@/components/Header";
 import Button from "@/components/Button";
 import supabase from "@/config/supabaseConfig";
+import { useRouter } from "next/navigation";
+import { FormDataContext } from "@/context/FormDataContext";
 
 const page = () => {
+  // context
+  const { formData, setFormData } = useContext(FormDataContext)
+
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [team, setTeam] = useState<string>("");
@@ -15,11 +20,14 @@ const page = () => {
 
   const [formError, setFormError] = useState("")
 
+  const router = useRouter();
+
   const handleGenderChange = (selectedGender: string) => {
     setGender(selectedGender);
   };
 
   // console.log(gender);
+  console.log(formData);
 
   const sportsList = [
     "Football ⚽",
@@ -87,11 +95,15 @@ const page = () => {
       .select()
 
       if(error){
-        console.log(error.message);
+        console.log(error.details);
+        alert(error.details)
       }
 
       if(data){
         console.log("Data submitted to Supabase");
+        setFormData(submittedData)
+        router.push('/registered', )
+
       }
   }
 
