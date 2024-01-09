@@ -66,7 +66,18 @@ const page = () => {
     }
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const upLoadFile = async (file: File) => {
+    const { data, error } = await supabase.storage.from("participant-images").upload(`/${file.name}`, file);
+
+    if(error){
+      console.log("Error uploading file: ", error.message);
+    }else{
+      console.log("File uploaded successfully: ", data);
+      // return data.path;
+    }
+  }
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     setFile(selectedFile || null);
   };
@@ -76,6 +87,12 @@ const page = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    // upload file to supabase storage
+     if (file) {
+       upLoadFile(file);
+     }
+
+    // This is for the context
     const submittedData = {
       name,
       email,
@@ -85,16 +102,25 @@ const page = () => {
       // file: file?.name
     };
 
-    const { data, error } = await supabase
+    // FIXME: get the URL data from the upLoadFile function
+    const { data: insertData, error: insertError } = await supabase
       .from("participants")
-      .insert([{ email, gender, name, team, selectedSports }])
+      .insert([{ 
+        email, 
+        gender, 
+        name, 
+        team, 
+        selectedSports, 
+        file: file?.name, 
+        // url: data?.key => we need the data from the upLoadFile function
+      }])
       .select();
 
-    if (error) {
-      alert(error.details);
+    if (insertError) {
+      alert(insertError.details);
     }
 
-    if (data) {
+    if (insertData) {
       console.log("Data submitted to Supabase");
       setFormData(submittedData);
       router.push("/registered");
@@ -175,7 +201,7 @@ const page = () => {
 
         <div className="w-full flex gap-4 items-center">
           <label htmlFor="image" className="font-semibold">
-            Image
+            Image(Less than 5Mb)
           </label>
           <input
             required

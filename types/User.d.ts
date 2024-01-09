@@ -5,6 +5,7 @@ type User = {
     team: string;
     gender: "male" | "female"; 
     selectedSports: string[];
+    file: string;
 }
 
  type Note = {

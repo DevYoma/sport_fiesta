@@ -7,10 +7,7 @@ export const page = async () => {
   return (
     <div>
       {participants?.map((participant: User) => (
-        <div
-            className="border border-red-500 last-mb-4"
-            key={participant.id}
-        >
+        <div className="border border-red-500 last-mb-4" key={participant.id}>
           <h3>{participant.name}</h3>
           <p>{participant.email}</p>
           <p>{participant.gender}</p>
@@ -20,6 +17,9 @@ export const page = async () => {
               <li>{sport}</li>
             ))}
           </div>
+          {participant?.file && (
+            <img src={participant?.file} alt="pic-of-user" />
+          )}
         </div>
       ))}
     </div>
