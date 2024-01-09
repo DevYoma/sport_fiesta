@@ -1,10 +1,5 @@
 import supabase from '@/config/supabaseConfig';
 
-  type Note = {
-    id: number;
-    title: string
-  }
-
 export default async function Notes(){
     const { data: notes, error } = await supabase.from("notes").select()
 

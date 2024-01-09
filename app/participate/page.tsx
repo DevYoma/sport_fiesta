@@ -9,7 +9,7 @@ import { FormDataContext } from "@/context/FormDataContext";
 
 const page = () => {
   // context
-  const { formData, setFormData } = useContext(FormDataContext)
+  const { formData, setFormData } = useContext(FormDataContext);
 
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -18,7 +18,7 @@ const page = () => {
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
 
-  const [formError, setFormError] = useState("")
+  const [formError, setFormError] = useState("");
 
   const router = useRouter();
 
@@ -27,7 +27,7 @@ const page = () => {
   };
 
   // console.log(gender);
-  console.log(formData);
+  // console.log(formData);
 
   const sportsList = [
     "Football ⚽",
@@ -66,53 +66,50 @@ const page = () => {
     }
   };
 
-  // console.log(selectedSports);
-
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     setFile(selectedFile || null);
   };
 
-  // console.log(team);
-
+  // TODO: handle image storage to supabase
+  // TODO: use good alert error message for users
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // alert("Form submitted")
 
     const submittedData = {
-      name, 
-      email, 
-      team, 
-      gender, 
-      selectedSports, 
+      name,
+      email,
+      team,
+      gender,
+      selectedSports,
       // file: file?.name
-    }
-    console.log(submittedData);
+    };
 
     const { data, error } = await supabase
-      .from('participants')
+      .from("participants")
       .insert([{ email, gender, name, team, selectedSports }])
-      .select()
+      .select();
 
-      if(error){
-        console.log(error.details);
-        alert(error.details)
-      }
+    if (error) {
+      alert(error.details);
+    }
 
-      if(data){
-        console.log("Data submitted to Supabase");
-        setFormData(submittedData)
-        router.push('/registered', )
-
-      }
-  }
+    if (data) {
+      console.log("Data submitted to Supabase");
+      setFormData(submittedData);
+      router.push("/registered");
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center pb-20">
       <Header />
       <h3 className="text-2xl mb-8">Participation Page</h3>
 
-      <form onSubmit={handleSubmit} className="w-2/4 mx-auto flex flex-col gap-6">
+      <form
+        onSubmit={handleSubmit}
+        className="w-2/4 mx-auto flex flex-col gap-6"
+      >
         <div className="w-full flex gap-4 items-center">
           <label htmlFor="name" className="font-semibold">
             Name
@@ -190,7 +187,7 @@ const page = () => {
             onChange={handleFileChange}
           />
 
-          {file ? <p>Selected file: {file.name}</p> : 'No file selected'}
+          {file ? <p>Selected file: {file.name}</p> : "No file selected"}
         </div>
 
         <div className="w-full flex gap-4 items-center">
@@ -222,7 +219,7 @@ const page = () => {
               <>
                 <div key={sport} className="">
                   <input
-                    // required 
+                    // required
                     type="checkbox"
                     id={sport}
                     value={sport}

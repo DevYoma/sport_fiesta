@@ -6,6 +6,7 @@ import Header from '@/components/Header'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  
   const router = useRouter();
   return (
     <main className="flex min-h-screen flex-col items-center">
@@ -16,9 +17,9 @@ export default function Home() {
           <Button onClick={() => router.push('/participate')} >Participate </Button> 
           <CountDown />
         </div>
-        <Button onClick={() => router.push('/supa')} >SupaBase</Button>
+        {/* <Button onClick={() => router.push('/supa')} >SupaBase</Button> */}
         <Button onClick={() => alert("Sport Fiesta has not officially started")}>Scoreboard</Button>
-        <Button onClick={() => alert("Sport Fiesta has not officially started")}>Check out Participants</Button>
+        <Button onClick={() => router.push('/participants')}>Check out Participants</Button>
       </div>
     </main>
   )
