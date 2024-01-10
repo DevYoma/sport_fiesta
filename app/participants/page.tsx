@@ -7,6 +7,7 @@ export default async function Participants(){
     .select();
 
     if(error){
+      console.log(error);
       return (
         <p>Failed to fetch Data</p>
       )
