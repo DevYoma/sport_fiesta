@@ -17,8 +17,8 @@ export default function Home() {
           <Button onClick={() => router.push('/participate')} >Participate </Button> 
           {/* <CountDown /> */}
         {/* <Button onClick={() => router.push('/supa')} >SupaBase</Button> */}
-        <Button onClick={() => alert("Sport Fiesta has not officially started")}>Scoreboard</Button>
         <Button onClick={() => router.push('/participants')}>Check out Participants</Button>
+        <Button onClick={() => alert("Sport Fiesta has not officially started")}>Scoreboard</Button>
       </div>
 
       <Footer />

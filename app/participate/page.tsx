@@ -6,6 +6,8 @@ import Button from "@/components/Button";
 import supabase from "@/config/supabaseConfig";
 import { useRouter } from "next/navigation";
 import { FormDataContext } from "@/context/FormDataContext";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { db } from "@/config/firebase";
 
 const page = () => {
   // context
@@ -17,10 +19,12 @@ const page = () => {
   const [gender, setGender] = useState<string>("");
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
-
-  const [formError, setFormError] = useState("");
+  
+  const [supabaseImgUrl, setSupabaseImgUrl] = useState<string>("")
 
   const router = useRouter();
+
+  const userCollection = collection(db, "participants");
 
   const handleGenderChange = (selectedGender: string) => {
     setGender(selectedGender);
@@ -66,64 +70,59 @@ const page = () => {
     }
   };
 
-  const upLoadFile = async (file: File) => {
-    const { data, error } = await supabase.storage.from("participant-images").upload(`/${file.name}`, file);
+  const upLoadFile = async (file: File | any) => {
+    const { data, error } = await supabase.storage
+      .from("participant-images")
+      .upload(`/${file.name}`, file);
 
-    if(error){
+    if (error) {
       console.log("Error uploading file: ", error.message);
-    }else{
+    } else {
       console.log("File uploaded successfully: ", data);
-      // return data.path;
+      const link = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/participant-images/${data.path}`;
+      return link;
     }
-  }
+  };
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     setFile(selectedFile || null);
   };
 
-  // TODO: handle image storage to supabase
-  // TODO: use good alert error message for users
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     // upload file to supabase storage
-     if (file) {
-       upLoadFile(file);
-     }
-
-    // This is for the context
-    const submittedData = {
-      name,
-      email,
-      team,
-      gender,
-      selectedSports,
-      // file: file?.name
-    };
-
-    // FIXME: get the URL data from the upLoadFile function
-    const { data: insertData, error: insertError } = await supabase
-      .from("participants")
-      .insert([{ 
-        email, 
-        gender, 
-        name, 
-        team, 
-        selectedSports, 
-        file: file?.name, 
-        // url: data?.key => we need the data from the upLoadFile function
-      }])
-      .select();
-
-    if (insertError) {
-      alert(insertError.details);
+    if (file === null) {
+      return
+      // const imageUrl = await upLoadFile(file) as string;
+      // console.log(imageUrl);
+      // setSupabaseImgUrl(imageUrl);
     }
 
-    if (insertData) {
-      console.log("Data submitted to Supabase");
+    const submittedData = {
+      name: name,
+      email: email,
+      team: team,
+      gender: gender,
+      selectedSports: selectedSports,
+      file: file?.name,
+      url: await upLoadFile(file),
+    };
+
+    try {
+      //TODO: check for existing emails
+      const checkDuplicateEmails = async () => {
+        const existingUserEmail = userCollection;
+      };
+
+      const docRef = await addDoc(collection(db, "participants"), submittedData);
+
+      console.log("Data submitted to Firebase with id: " + docRef.id);
       setFormData(submittedData);
       router.push("/registered");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -225,6 +224,7 @@ const page = () => {
             id="team"
             className="text-black w-full rounded-md px-5 py-1"
             onChange={(event) => setTeam(event.target.value)}
+            required
           >
             <option value="" disabled selected>
               Select your team

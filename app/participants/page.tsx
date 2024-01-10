@@ -1,35 +1,41 @@
-import supabase from "@/config/supabaseConfig";
+// 'use client'
+
+// import supabase from "@/config/supabaseConfig";
+import { db } from "@/config/firebase";
+import { collection, getDocs } from "firebase/firestore";
 import Link from "next/link";
 
-export default async function Participants() {
-  const { data: participants, error } = await supabase
-    .from("participants")
-    .select();
+// FIXME: make the call more efficient
+ const getAllUsersFromFB = async () => {
+   const querySnapshot = await getDocs(collection(db, "participants"));
+   let data: User[] | any = [];
+   querySnapshot.forEach((doc) => {
+     data.push({
+       id: doc.id,
+       ...doc.data(),
+     });
+   });
+   return data;
+ };
 
-  if (error) {
-    console.log(error);
+export default async function Participants() {
+
+  const userData = await getAllUsersFromFB();
+  console.log(userData);
+
+  if(userData.length === 0) {
     return (
       <div>
         <h1 className="text-center text-2xl">Participants Page</h1>
-        <p>Failed to fetch Data</p>
         <Link href={"/"} className="text-blue-400 underline text-center">
           Go to Home Page
         </Link>
+        <div className="mt-8">
+          <p>No participants yet</p>
+        </div>
       </div>
-    );
+    )
   }
-
-  // if (participants.length === 0) {
-  //   return (
-  //     <div>
-  //       <h1 className="text-center text-2xl">Participants Page</h1>
-  //       <p>No Registered User</p>
-  //       <Link href={"/"} className="text-blue-400 underline text-center">
-  //         Go to Home Page
-  //       </Link>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div>
@@ -38,7 +44,7 @@ export default async function Participants() {
         Go to Home Page
       </Link>
       <div className="mt-8">
-        {participants?.map((participant: User) => (
+        {userData?.map((participant: User) => (
           <div className="border border-red-500 mb-4" key={participant.id}>
             <h3>{participant.name}</h3>
             <p>{participant.email}</p>
@@ -49,8 +55,8 @@ export default async function Participants() {
                 <li>{sport}</li>
               ))}
             </div>
-            {participant?.file && (
-              <img src={participant?.file} alt="pic-of-user" />
+            {participant?.url && (
+              <img src={participant?.url} alt="pic-of-user" />
             )}
           </div>
         ))}
