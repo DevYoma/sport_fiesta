@@ -156,7 +156,7 @@ const page = () => {
           </label>
           <input
             required
-            type="text"
+            type="email"
             name="email"
             id="email"
             placeholder="olemore@student.oauife.edu.ng"

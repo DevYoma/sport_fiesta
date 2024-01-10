@@ -6,7 +6,7 @@ import { collection, getDocs } from "firebase/firestore";
 import Link from "next/link";
 
 // FIXME: make the call more efficient
- const getAllUsersFromFB = async () => {
+ async function getAllUsersFromFB(){
    const querySnapshot = await getDocs(collection(db, "participants"));
    let data: User[] | any = [];
    querySnapshot.forEach((doc) => {
@@ -18,7 +18,7 @@ import Link from "next/link";
    return data;
  };
 
-export default async function Participants() {
+export default async function Page() {
 
   const userData = await getAllUsersFromFB();
   console.log(userData);
