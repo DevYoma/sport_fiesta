@@ -19,17 +19,17 @@ export default async function Participants() {
     );
   }
 
-  if (participants.length === 0) {
-    return (
-      <div>
-        <h1 className="text-center text-2xl">Participants Page</h1>
-        <p>No Registered User</p>
-        <Link href={"/"} className="text-blue-400 underline text-center">
-          Go to Home Page
-        </Link>
-      </div>
-    );
-  }
+  // if (participants.length === 0) {
+  //   return (
+  //     <div>
+  //       <h1 className="text-center text-2xl">Participants Page</h1>
+  //       <p>No Registered User</p>
+  //       <Link href={"/"} className="text-blue-400 underline text-center">
+  //         Go to Home Page
+  //       </Link>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
