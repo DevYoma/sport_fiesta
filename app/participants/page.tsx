@@ -1,22 +1,42 @@
 import supabase from "@/config/supabaseConfig";
 import Link from "next/link";
 
-export default async function Participants(){
+export default async function Participants() {
   const { data: participants, error } = await supabase
     .from("participants")
     .select();
 
-    if(error){
-      console.log(error);
-      return (
+  if (error) {
+    console.log(error);
+    return (
+      <div>
+        <h1 className="text-center text-2xl">Participants Page</h1>
         <p>Failed to fetch Data</p>
-      )
-    }
+        <Link href={"/"} className="text-blue-400 underline text-center">
+          Go to Home Page
+        </Link>
+      </div>
+    );
+  }
+
+  if (participants.length === 0) {
+    return (
+      <div>
+        <h1 className="text-center text-2xl">Participants Page</h1>
+        <p>No Registered User</p>
+        <Link href={"/"} className="text-blue-400 underline text-center">
+          Go to Home Page
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div>
       <h1 className="text-center text-2xl">Participants Page</h1>
-      <Link href={'/'} className="text-blue-400 underline text-center">Go to Home Page</Link>
+      <Link href={"/"} className="text-blue-400 underline text-center">
+        Go to Home Page
+      </Link>
       <div className="mt-8">
         {participants?.map((participant: User) => (
           <div className="border border-red-500 mb-4" key={participant.id}>
@@ -37,5 +57,4 @@ export default async function Participants(){
       </div>
     </div>
   );
-};
-
+}
