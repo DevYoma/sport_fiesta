@@ -1,41 +1,36 @@
-// 'use client'
+"use client";
 
 // import supabase from "@/config/supabaseConfig";
 import { db } from "@/config/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+} from "firebase/firestore";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-// FIXME: make the call more efficient
- async function getAllUsersFromFB(){
-   const querySnapshot = await getDocs(collection(db, "participants"));
-   let data: User[] | any = [];
-   querySnapshot.forEach((doc) => {
-     data.push({
-       id: doc.id,
-       ...doc.data(),
-     });
-   });
-   return data;
- };
 
-export default async function Page() {
+export default function Page() {
+  const [participants, setParticipants] = useState<User[]>([]);
 
-  const userData = await getAllUsersFromFB();
-  console.log(userData);
+  useEffect(() => {
+    const firebaseUserData = query(collection(db, "participants"));
+    const unsubscribe = onSnapshot(firebaseUserData, (querySnapshot) => {
+      let itemsArr: User[] | any = [];
 
-  if(userData.length === 0) {
-    return (
-      <div>
-        <h1 className="text-center text-2xl">Participants Page</h1>
-        <Link href={"/"} className="text-blue-400 underline text-center">
-          Go to Home Page
-        </Link>
-        <div className="mt-8">
-          <p>No participants yet</p>
-        </div>
-      </div>
-    )
-  }
+      querySnapshot.forEach((doc) => {
+        itemsArr.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+
+      setParticipants(itemsArr);
+
+      return () => unsubscribe();
+    });
+  }, []);
 
   return (
     <div>
@@ -44,7 +39,7 @@ export default async function Page() {
         Go to Home Page
       </Link>
       <div className="mt-8">
-        {userData?.map((participant: User) => (
+        {participants?.map((participant: User) => (
           <div className="border border-red-500 mb-4" key={participant.id}>
             <h3>{participant.name}</h3>
             <p>{participant.email}</p>

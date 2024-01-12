@@ -111,7 +111,7 @@ const page = () => {
     };
 
     try {
-      //TODO: check for existing emails
+      //TODO: check for existing emails using SUPABASE
       const checkDuplicateEmails = async () => {
         const existingUserEmail = userCollection;
       };
