@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { FormDataContext } from "@/context/FormDataContext";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "@/config/firebase";
+import Link from "next/link";
 
 const page = () => {
   // context
@@ -19,12 +20,8 @@ const page = () => {
   const [gender, setGender] = useState<string>("");
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
-  
-  const [supabaseImgUrl, setSupabaseImgUrl] = useState<string>("")
 
   const router = useRouter();
-
-  const userCollection = collection(db, "participants");
 
   const handleGenderChange = (selectedGender: string) => {
     setGender(selectedGender);
@@ -94,10 +91,21 @@ const page = () => {
 
     // upload file to supabase storage
     if (file === null) {
-      return
-      // const imageUrl = await upLoadFile(file) as string;
-      // console.log(imageUrl);
-      // setSupabaseImgUrl(imageUrl);
+      return;
+    }
+
+    if (!email.includes("@student.oauife.edu.ng")) {
+      alert("Please use your OAU student email");
+      return;
+    }
+
+    //TODO: check for existing emails using SUPABASE
+    const { data, error } = await supabase
+      .from("participants")
+      .insert([{ email }]);
+    if (error) {
+      alert("Email already exists");
+      return;
     }
 
     const submittedData = {
@@ -111,12 +119,10 @@ const page = () => {
     };
 
     try {
-      //TODO: check for existing emails using SUPABASE
-      const checkDuplicateEmails = async () => {
-        const existingUserEmail = userCollection;
-      };
-
-      const docRef = await addDoc(collection(db, "participants"), submittedData);
+      const docRef = await addDoc(
+        collection(db, "participants"),
+        submittedData
+      );
 
       console.log("Data submitted to Firebase with id: " + docRef.id);
       setFormData(submittedData);
@@ -130,6 +136,9 @@ const page = () => {
     <div className="flex min-h-screen flex-col items-center pb-20">
       <Header />
       <h3 className="text-2xl mb-8 text-center">Participation Page</h3>
+      <Link href={"/"} className="mb-4 text-blue-400 underline text-center">
+        Go to Home Page
+      </Link>
 
       <form
         onSubmit={handleSubmit}
