@@ -4,13 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC20sQLsWoFMWrLiycOyDwvAY-SjuEsy7M",
-  authDomain: "sport-fiesta.firebaseapp.com",
-  projectId: "sport-fiesta",
-  storageBucket: "sport-fiesta.appspot.com",
-  messagingSenderId: "563007642622",
-  appId: "1:563007642622:web:56fcf86a9e856b206f3eaf",
-  measurementId: "G-V1ZL34E7CP",
+  apiKey: `${process.env.NEXT_PUBLIC_APP_APIKEY}`,
+  authDomain: `${process.env.NEXT_PUBLIC_APP_AUTHDOMAIN}`,
+  projectId: `${process.env.NEXT_PUBLIC_APP_PROJECTID}`,
+  storageBucket: `${process.env.NEXT_PUBLIC_APP_STORAGEBUCKET}`,
+  messagingSenderId: `${process.env.NEXT_PUBLIC_APP_MESSAGINGSENDERID}`,
+  appId: `${process.env.NEXT_PUBLIC_APPID}`,
+  measurementId: `${process.env.NEXT_PUBLIC_APP_MEASUREMENTID}`,
 };
 
 // Initialize Firebase

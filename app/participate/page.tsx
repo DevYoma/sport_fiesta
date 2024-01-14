@@ -20,6 +20,7 @@ const page = () => {
   const [gender, setGender] = useState<string>("");
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter();
 
@@ -88,6 +89,7 @@ const page = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true)
 
     // upload file to supabase storage
     if (file === null) {
@@ -96,6 +98,7 @@ const page = () => {
 
     if (!email.includes("@student.oauife.edu.ng")) {
       alert("Please use your OAU student email");
+      setLoading(false)
       return;
     }
 
@@ -105,6 +108,7 @@ const page = () => {
       .insert([{ email }]);
     if (error) {
       alert("Email already exists");
+      setLoading(false)
       return;
     }
 
@@ -128,6 +132,7 @@ const page = () => {
       setFormData(submittedData);
       router.push("/registered");
     } catch (error) {
+      setLoading(false)
       console.log(error);
     }
   };
@@ -270,7 +275,7 @@ const page = () => {
           </div>
         </div>
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={loading}>Submit</Button>
       </form>
     </div>
   );
