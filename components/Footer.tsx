@@ -1,5 +1,3 @@
-// "use client"
-
 import Link from "next/link";
 
 const Footer = () => {
@@ -10,14 +8,14 @@ const Footer = () => {
         href={"https://twitter.com/devyoma"}
         className="text-blue-400 font-semibold cursor-pointer"
       >
-        YOMA
+        Yoma
       </Link>
       , Designed by{" "}
       <Link
-        href={"https://twitter.com/toluwaniii_a"}
+        href={"https://twitter.com/bakarook"}
         className="text-blue-400 font-semibold cursor-pointer"
       >
-        TOLUWANI
+        Faruq
       </Link>
     </div>
   );
